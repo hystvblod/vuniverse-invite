@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Invitation VUniverse</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: radial-gradient(circle at top, #f6e7cf 0, #1b6688 62%, #03279e 100%);
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .box {
+      max-width: 420px;
+    }
+
+    .logo {
+      width: min(78vw, 320px);
+      height: auto;
+      display: block;
+      margin: 0 auto 18px;
+      animation: pulse 2.2s ease-in-out infinite;
+      filter: drop-shadow(0 12px 28px rgba(0,0,0,.35));
+    }
+
+    .txt {
+      font-size: 18px;
+      font-weight: 800;
+      text-shadow: 0 2px 10px rgba(0,0,0,.35);
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.92); opacity: .9; }
+      50% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(0.92); opacity: .9; }
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <img class="logo" src="logo_vuniverse.webp" alt="VUniverse">
+    <div class="txt">Redirection en cours...</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    (async function () {
+      const params = new URLSearchParams(window.location.search);
+      const inviterUuid = (params.get("inviter_uuid") || "").trim();
+
+      const SUPABASE_URL = "https://TONPROJET.supabase.co";
+      const SUPABASE_ANON_KEY = "TA_CLE_ANON";
+      const PLAY_URL = "https://play.google.com/store/apps/details?id=com.vboldstudio.vuniverse";
+      const APP_STORE_URL = "https://apps.apple.com/app/idTON_ID_IOS";
+
+      const ua = navigator.userAgent || "";
+      const isIOS = /iPhone|iPad|iPod/i.test(ua);
+      const targetUrl = isIOS ? APP_STORE_URL : PLAY_URL;
+
+      if (!inviterUuid) {
+        window.location.replace(targetUrl);
+        return;
+      }
+
+      try {
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        await sb.rpc("secure_claim_referral_click", {
+          p_inviter: inviterUuid
+        });
+      } catch (_) {}
+
+      window.location.replace(targetUrl);
+    })();
+  </script>
+</body>
+</html>
