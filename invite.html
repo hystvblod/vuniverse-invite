@@ -61,10 +61,13 @@
       const params = new URLSearchParams(window.location.search);
       const inviterUuid = (params.get("inviter_uuid") || "").trim();
 
-      const SUPABASE_URL = "https://TONPROJET.supabase.co";
-      const SUPABASE_ANON_KEY = "TA_CLE_ANON";
+      const SUPABASE_URL = "https://fbkbqfkgdjkjdfijmggd.supabase.co";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZia2JxZmtnZGpramRmaWptZ2dkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5MTIyOTgsImV4cCI6MjA4MTQ4ODI5OH0.ylBfBeXBWliR13GumJrFazRjP57RyBR3mzaebF7Iy24";
+
       const PLAY_URL = "https://play.google.com/store/apps/details?id=com.vboldstudio.vuniverse";
-      const APP_STORE_URL = "https://apps.apple.com/app/idTON_ID_IOS";
+
+      // A CHANGER PLUS TARD SI TU VEUX LE VRAI APP STORE
+      const APP_STORE_URL = PLAY_URL;
 
       const ua = navigator.userAgent || "";
       const isIOS = /iPhone|iPad|iPod/i.test(ua);
@@ -81,7 +84,9 @@
         await sb.rpc("secure_claim_referral_click", {
           p_inviter: inviterUuid
         });
-      } catch (_) {}
+      } catch (err) {
+        console.error("[invite] secure_claim_referral_click failed", err);
+      }
 
       window.location.replace(targetUrl);
     })();
